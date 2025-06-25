@@ -1,0 +1,13 @@
+Metadata-Version: 2.4
+Name: llama-index-multi-modal-llms-openai
+Version: 0.5.1
+Summary: llama-index multi-modal-llms openai integration
+Author-email: Your Name <you@example.com>
+License-Expression: MIT
+License-File: LICENSE
+Requires-Python: <4.0,>=3.9
+Requires-Dist: llama-index-core<0.13,>=0.12.3
+Requires-Dist: llama-index-llms-openai<0.5,>=0.4.0
+Description-Content-Type: text/markdown
+
+# LlamaIndex Multi-Modal-Llms Integration: Openai

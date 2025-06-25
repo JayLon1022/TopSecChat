@@ -1,0 +1,33 @@
+Buran勒索病毒样本分析
+
+目录
+一、样本概况 
+二、具体行为分析 
+三、清理病毒残留思路 
+
+一、样本概况
+SHA256：5c1141aa7d0b9fba71822607f3b1b086e2cc4529e63221a9a6ede74fa366512f  
+该样本启动后，释放新的PE文件，通过CreateProcessInternalW创建系统假进程，并通过ShellExecuteExW启动一个隐藏界面的进程，同时在注册表中设置该程序为自启动。通过cmd进程，根据参数的不同执行不同的流程。在病毒运行前，进行了国家和地区的检查，特定国家不会运行该病毒程序。程序运行后会删除系统的备份文件，同时删除自身。
+
+二、具体行为分析
+该病毒会删除文件，循环遍历系统中的文件并进行加密，设置注册表项，释放PE文件，修改注册表自启动项，删除病毒程序本体，启动自释放的文件。勒索信内容中会打开网址http://geoiptool.com，对比国家和地区，特定国家和地区不会发起攻击。
+
+添加自启动项服务，调用cmd进程，创建lsass.exe并添加自启动项Local Security Authority Subsystem Service，退出当前进程并删除执行目录下的病毒文件。
+
+生成对用户文件加密的公钥和私钥，病毒程序为当前用户生成一对RSA私钥和公钥，其中私钥通过攻击者的RSA公钥处理并进行base64编码后放入注册表。删除备份的文件和日志，首先进行提权操作。
+
+在高权限的情况下，调用cmd执行命令，实现备份数据的删除，禁用系统开机自动修复，清空注册表记录，清空系统日志，禁用事件记录。Buran通过WNetResourceW等相关系统API枚举可访问的网络资源，记录本地磁盘中所有资源并将其写入注册表项HKCU\Software\Buran V\Service\Paths，键值为资源根目录名。
+
+通过cmd参数-start运行进程，等待新创建的加密子进程执行完毕后，在桌面创建勒索信息提示文件，使用记事本notepad.exe打开文件以提示用户，最后自我删除退出。病毒程序对本地资源和局域网资源文件进行加密；在对本地资源加密时，搜索判断文件资源所在的目录，对于用户浏览器需要用到的资源则不进行加密，而在网络资源加密时则通过文件名的后缀来进行加密。
+
+三、清理病毒残留思路
+1. 杀死进程C:\Windows\System32\cmd.exe
+2. 删除自启动注册表项HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run\Local Security Authority Subsystem Service
+3. 删除文件
+"%HOMEPATH%\AppData\Roaming\Microsoft\Windows\lsass.exe" -start  
+"C:\Windows\system32\cmd.exe" /C bcdedit /set {default} bootstatuspolicy ignoreallfailures  
+bcdedit /set {default} bootstatuspolicy ignoreallfailures  
+%HOMEPATH%\AppData\Local\Temp\C46E9A24.buran  
+%HOMEPATH%\AppData\Local\Temp\58AE9100.buran  
+bcdedit /set {default} recoveryenabled no
+4. 恢复注册表值HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\SystemCertificates\AuthRoot\Certificates\D1EB23A46D17D68FD92564C2F1F1601764D8E349\Blob

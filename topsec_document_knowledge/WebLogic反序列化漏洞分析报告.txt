@@ -1,0 +1,82 @@
+WebLogic反序列化历史漏洞分析报告
+
+一、前言  
+从2015年11月6日到2020年4月15日，Oracle官方发布了多个高危漏洞的风险通告，其中多个漏洞与Oracle WebLogic Server核心组件的T3协议反序列化漏洞有关。本文旨在分析WebLogic历史上的反序列化漏洞。为了让大家更加了解和重视WebLogic漏洞，天融信阿尔法实验室编制了本报告，报告从WebLogic的背景介绍、技术分析、漏洞类型、数据资产统计情况及修复建议等方面进行了全面的阐述。
+
+二、背景介绍  
+2.1 WebLogic框架背景  
+WebLogic是美国Oracle公司出品的一个应用服务器，确切地说是一个基于JAVA EE架构的中间件。WebLogic用于开发、集成、部署和管理大型分布式Web应用、网络应用和数据库应用的Java应用服务器，将Java的动态功能和Java Enterprise标准的安全性引入大型网络应用的开发、集成、部署和管理之中。通过天融信风险探知平台对全球WebLogic服务器进行筛查统计，全球范围内存活的WebLogic服务器约有28000余台，其中我国范围内的WebLogic服务器约有14000余台。
+
+下图为世界范围内WebLogic服务器排名前十情况：
+- 中国：16000
+- 美国：14296
+- 瑞典：14000
+- 加拿大：12000
+- 韩国：10000
+- 法国：8173
+- 英国：8000
+- 印度：6000
+- 日本：4000
+- 越南：2000
+
+下图为国内范围内WebLogic服务器的端口排名前十情况：
+- 80、443、8080、8001、7001、8081、81、8000、8088、9001的统计数量依次为：12000、9643、10000、8000、6000、4000、1655、2000、1139、502。
+
+下图为运营商排名前十情况：
+- 电信：7000
+- 联通：5742
+- 移动：6000
+- 教育网：5000
+- 阿里云：4000
+- 鹏博士：3409
+- 阿里巴巴：3000
+- 铁通：2000
+- 世纪互联：1072
+- 腾讯网络：1000
+
+2.2 WebLogic漏洞简述  
+自CVE编号CVE-2015-4852的WebLogic命令执行漏洞被发现以来，已经出现了30个反序列化漏洞。此外，WebLogic还存在XMLDecoder反序列化漏洞、SSRF、任意文件上传等类型的漏洞。本文主要讲述T3和IIOP协议的反序列化漏洞。
+
+WebLogic反序列化漏洞数量图：
+- 年份 CVE编号 CVSS分数 描述
+- 2015 N/A 使用org.apache.commons.collections组件，通过T3协议7001端口传输特制的序列化Java对象来执行任意命令。
+- 2016 CVE-2016-0638 9.8 使用StreamMessageImpl类，绕过黑名单，通过T3协议7001端口传输特制的序列化Java对象来执行任意命令。
+- 2016 CVE-2016-3510 9.8 使用MarshalledObject类，绕过黑名单，通过T3协议7001端口传输特制的序列化Java对象来执行任意命令。
+- 2017 CVE-2017-3248 8.6 使用weblogic/cluster/singleton/ServerMigrationCoordinator类，通过T3协议7001端口传输特制的序列化Java对象来执行任意命令。
+- 2018 CVE-2018-2628 9.8 WebLogic XMLDecoder反序列化漏洞，通过T3协议7001端口传输特制的序列化Java对象来执行任意命令。
+- 2018 CVE-2018-2893 9.8 使用JRMP类，通过T3协议7001端口传输特制的序列化Java对象来执行任意命令。
+- 2018 CVE-2018-3191 9.8 使用Registry接口来绕过CVE-2017-3248补丁，通过T3协议7001端口传输特制的序列化Java对象来执行任意命令。
+- 2018 CVE-2018-3245 9.8 使用weblogic.jrmp.RegistryImpl_Stub类，通过T3协议7001端口传输特制的序列化Java对象来执行任意命令。
+- 2019 CVE-2019-2890 6.5 使用PersistentContext类，绕过黑名单，通过T3协议7001端口传输特制的序列化Java对象来执行任意命令。
+- 2020 CVE-2020-2551 9.8 WebLogic默认支持T3、IIOP基于序列化数据传输协议，虽然使用相同的黑名单类，但在处理上有所不同，导致此漏洞可以在黑名单列表中找到可以用来在IIOP协议上进行攻击。
+
+2.3 WebLogic影响概述  
+由于WebLogic框架的普及性，漏洞一经爆发，影响范围非常广泛，众多行业遭受波及，包括但不限于教育、政府、金融、互联网和通信行业。北京、上海、广州等经济发达地区沦为漏洞高发区。WebLogic框架的漏洞一直是网络安全中的顽疾，由于许多信息系统在开发阶段使用了WebLogic作为底层框架，而后期运行人员往往无法判断底层架构中是否存在漏洞。如果开发人员离职或停止技术支持，漏洞可能长期存在并持续造成危害。黑客可以直接利用该漏洞通过浏览器在远程服务器上执行任意系统命令，严重影响受影响站点，可能导致数据泄露、网页篡改、植入后门或成为肉鸡等安全事件。
+
+三、漏洞分析  
+本章内容主要分析漏洞的详细技术，探讨漏洞产生的原因和修补方式。
+
+CVE-2015-4852  
+漏洞描述：此漏洞的原理在于org.apache.commons.collections组件存在潜在的远程代码执行漏洞，应用Java的反序列化部分机制的问题。在Java反序列化中，传入的序列化数据未进行安全性检查，恶意的TransformedMap序列化可能导致远程命令执行。受影响的系统版本包括10.3.6.0、12.1.2.0、12.1.3和12.2.1。
+
+漏洞分析：此漏洞主要是由于WebLogic使用了Apache Commons Collections的依赖，而Commons Collections可构造出执行任意类的任意方法的调用链。T3协议基于序列化数据传输，WebLogic在接收数据时会进行反序列化，Java在反序列化时会自动执行该类的readObject方法。由于WebLogic使用了Commons Collections的依赖，因此可以在T3协议上传输恶意的序列化数据进行RCE。
+
+修补方式：WebLogic通过增加黑名单列表的ClassFilter类，利用resolveClass方法判断反序列化的值是否在黑名单列表中。
+
+CVE-2016-0638  
+漏洞描述：此漏洞使用StreamMessageImpl类创建自己的InputStream对象时未使用黑名单中的ServerChannelInputStream和MsgAbbrevInputStream的readExternal进行反序列化，因此可以绕过黑名单列表。受影响的系统版本包括10.3.6、12.1.2、12.1.3和12.2.1。
+
+漏洞分析：漏洞作者找到了StreamMessageImpl类，该类的readExternal方法执行了(ObjectInputStream)var5.readObject，var5的值参数可控，将Commons Collections调用链的序列化值赋值给StreamMessageImpl对象，反序列化时自动调用StreamMessageImpl.readExternal方法，而该类不在黑名单列表中。
+
+修补方式：修改了StreamMessageImpl.readExternal的代码，增加FilteringObjectInputStream类进行过滤。
+
+后续的CVE漏洞分析和修复建议部分内容与上述相似，涉及的漏洞包括CVE-2016-3510、CVE-2017-3248、CVE-2018-2628等，具体分析了每个漏洞的描述、受影响版本及修补方法。
+
+四、总结  
+4.1 漏洞总结  
+WebLogic默认支持T3、IIOP等基于序列化数据传输协议，因此在接收数据时会进行反序列化。由于Java在反序列化时会执行readObject等方法，WebLogic自身使用了许多jar，因此很容易出现反序列化漏洞。这些漏洞能够执行任意命令，危害等级高。从WebLogic第一个反序列化漏洞开始，漏洞发现者一直在WebLogic lib中寻找新的调用链。WebLogic发布的更新补丁没有进行混淆、加密处理，官方采用黑名单来阻止恶意加载的类，安全人员通过对比相关代码即可知道漏洞调用链的关键类。
+
+4.2 修复建议  
+- 如果业务中没有使用T3、IIOP等协议，可以在控制台进行关闭。具体操作为进入WebLogic控制台，在base_domain的配置页面中，进入“安全”选项卡，点击“筛选器”，在连接筛选器中输入weblogic.security.net.ConnectionFilterImpl，连接筛选器规则中输入127.0.0.1 * * allow t3 t3s，0.0.0.0/0 * * deny t3 t3s（t3和t3s协议的所有端口只允许本地访问），并在WebLogic控制台中选择“服务”->“AdminServer”->“协议”，取消“启用IIOP”的勾选，保存后需重新启动，规则方可生效。
+- 关注Oracle官方安全公告信息，已发布的版本更新应尽快升级到不受影响的新版本，建议在升级前做好数据备份。Oracle官方安全公告链接：https://www.oracle.com/security-alerts/#SecurityAlerts。
+- 目前，天融信公司的TopWAF及TopIDP系列产品已可防御利用此类漏洞发起的网络攻击。天融信公司将积极为用户提供技术支持，如有需要请拨打24小时客服热线：400-777-0777。天融信Web应用安全防护系统（TopWAF产品）及天融信自主研发的入侵防御系统（TopIDP产品）具备常见漏扫工具防护功能，包括但不限于Sqlmap、AWVS、APPScan等，同时具备Web漏洞攻击防御功能，包括但不限于SQL注入、XSS、目录遍历、代码注入、命令执行、WebShell检测等，可以有效防御攻击者的Web攻击。

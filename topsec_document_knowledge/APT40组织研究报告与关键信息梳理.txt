@@ -1,0 +1,190 @@
+APT组织研究报告  
+APT40关键信息梳理  
+新兴组织  
+2019年3月  
+听风者实验室  
+
+FireEye APT40关键信息梳理  
+一．关键点梳理  
+二．涉及TTP  
+三．涉及样本及分析  
+样本信息：  
+样本行为分析：  
+持久化：  
+网络连接：  
+隐蔽自身：  
+四．IOC  
+文件哈希：  
+IP：  
+URL：  
+
+一．关键点梳理  
+APT组织名称：APT40  
+别称：TEMP.Periscope、TEMP.Jumper、Leviathan  
+关联组织：NanHaiShu  
+组织最早活动时间：2013年  
+最早报道时间：NanHaiShu组织最早被报道于2016年，Leviathan最早被报道于2017年。  
+组织目标国家：柬埔寨、比利时、德国、香港、菲律宾、马来西亚、挪威、沙特阿拉伯、瑞士、美国和英国  
+组织目标行业：工程、运输和国防工业，特别是与海事技术相关的部分  
+
+二．涉及TTP  
+根据FireEye的报道，APT40使用的攻击技术非常多，TTP超过50个。其中作用明确的TTP如下：  
+攻击阶段 使用技术 描述  
+钓鱼活动  
+战略性Web攻击  
+Web服务器攻击  
+初始攻击  
+一套简单的代码注入webshell，可在HTTP POST命令中执行微软.NET代码。这意味着该shell将能够上传与China Chopper下载文件，使用Web服务器帐户权限执行应用程序，列出目录内容，访问Active Directory，访问数据库以及其它.NET运行过程中所允许的其它操作。  
+JspSpy是一个在github.com上公开发布的可用web shell，公开可用的版本是“Code By Ninty”。  
+SCANBOX恶意软件  
+第一阶段后门，一款基于JavaScript的后门，亦被称为AIRBREAK “Orz”，能够从受入侵的合法服务与网页中收集配置文件与隐藏字符串，进而检索相关命令。  
+BADFLICK  
+一款后门程序，能够修改文件系统，生成反向shell并修改其命令与控制（简称C&C）配置。  
+BLACKCOFFEE  
+一款可将自身流量混淆为指向GitHub及微软Technet门户等合法网站的正常流量的后门。APT17（同样被认为是中国的黑客组织）曾经使用过这款工具。  
+EVILTECH  
+APT40自定义恶意软件。  
+FRESHAIR  
+APT40使用的第一阶段后门。  
+Gh0st RAT  
+一款开源远程访问工具，被多个组织使用。  
+一套简单的代码注入webshell，可在HTTP POST命令中执行微软.NET代码。这意味着该shell将能够上传与China Chopper下载文件，使用Web服务器帐户权限执行应用程序，列出目录内容，访问Active Directory，访问数据库以及其它.NET运行过程中所允许的其它操作。  
+一款DLL后门，亦被称为“Derusbi”，能够获取目录、文件与驱动器列表；创建反向shell；执行屏幕截图；录制视频与音频；列出、终止及创建进程；枚举、启动并删除注册表项与值；记录键盘输入结果，从受保护的存储介质中返回用户名及密码；对文件进行重命名、删除、复制、移动、读取以及写入。  
+Sogu(PlugX)  
+一种使用模块化插件的远程访问工具（RAT）。  
+一款适用于Cobalt Strike软件平台的商用后门，通常用于对网络环境进行渗透测试。该恶意软件支持多种功能，包括注入与执行任意代码、上传及下载文件以及执行shell命令。  
+
+DADBOD  
+APT40存在的恶意软件。  
+一款面向64位Windows系统的密码提取器/破解器，其此前曾与AIRBREAK以及BADFLICK后门一起注入目标系统。某些字符串会使用XOR x56进行模糊处理。  
+HOMEFRY  
+该恶意软件可在命令行中接受两条参数：一条用于为每个登录会话显示明文凭证，另一条用于为每个登录会话显示明文凭证、NTLM哈希以及恶意软件版本。  
+提权  
+一个凭证转储器，能够获取纯文本Windows帐户登录名和密码，以及许多其他功能。  
+ProcDump  
+是System Internal提供的一个专门用来监测程序CPU高使用率从而生成进程dump文件的工具。  
+Windows Credential Editor  
+一种密码转储工具。  
+Quarks PwDump  
+一款开放源代码的Windows用户凭据提取工具。  
+MURKYTOP  
+一款命令行侦察工具，可用于以不同用户身份实现文件执行、本地移动以及删除。此外，它还能够调度远程AT作业、在连接的网络上进行主机发现、扫描已接入主机上的开放网络端口，进而检索该远程主机上的操作系统、用户、组以及共享信息。  
+Nmap  
+是一款用于网络发现和安全审计的网络安全工具，通常用于列举网络主机清单、管理服务升级调度、监控主机、服务运行状况。  
+net.exe  
+网络资源管理工具。  
+MURKYSHELL  
+被APT40用来端口扫描IP地址并进行网络枚举。  
+持久化  
+AIRBREAK “Orz”，能够从受入侵的合法服务与网页中收集配置文件与隐藏字符串，进而检索相关命令。  
+
+一款DLL后门，亦被称为“Derusbi”，能够获取目录、文件与驱动器列表；创建反向shell；执行屏幕截图；录制视频与音频；列出、终止及创建进程；枚举、启动并删除注册表项与值；记录键盘输入结果，从受保护的存储介质中返回用户名及密码；对文件进行重命名、删除、复制、移动、读取以及写入。  
+一套简单的代码注入webshell，可在HTTP POST命令中执行微软.NET代码。这意味着该shell将能够上传与China Chopper下载文件，使用Web服务器帐户权限执行应用程序，列出目录内容，访问Active Directory，访问数据库以及其它.NET运行过程中所允许的其它操作。  
+JspSpy是一个在github.com上公开发布的可用web shell，公开可用的版本是“Code By Ninty”。  
+at.exe  
+Windows实用程序，任务计划程序。  
+net.exe  
+网络资源管理工具。  
+MURKYTOP  
+一款命令行侦察工具，可用于以不同用户身份实现文件执行、本地移动以及删除。此外，它还能够调度远程AT作业、在连接的网络上进行主机发现、扫描已接入主机上的开放网络端口，进而检索该远程主机上的操作系统、用户、组以及共享信息。  
+DISHCLOTH  
+APT40的自定义实用程序，用来攻击不同的协议和服务。  
+BLACKCOFFEE  
+一款可将自身流量混淆为指向GitHub及微软Technet门户等合法网站的正常流量的后门。APT17（同样被认为是中国的黑客组织）曾经使用过这款工具。  
+LUNCHMONEY  
+一款能够将文件渗漏至Dropbox的上传器。  
+
+除上述工具外，APT40组织还使用了其他攻击手法或工具，目前没有对这些攻击手法或工具的详细说明，列举如下：  
+
+攻击阶段 使用工具  
+初始攻击 DEATHCLOCK  
+初始攻击 FINDLOCK  
+初始攻击 TRANSPORTER  
+建立立足点 WASHBOARD  
+建立立足点 ZXSHELL  
+建立立足点 ESKC2  
+提权 GSECDUMP  
+提权 TWNICKS  
+提权 BADSIGN  
+提权 COOKIEFISH  
+提权 GREENPIG  
+提权 WAVEKEY  
+提权 COATHOOK  
+提权 MOVIETIME  
+内部侦查 WILDELK  
+内部侦查 WIDETONE  
+内部侦查 JUMPKICK  
+持久化 GRILLMARK  
+持久化 FIELDGOAL  
+持久化 REDMAGE  
+持久化 TRAFFIX  
+内网横移 RELAYRACE  
+内网横移 ABPTTS(A Black Path Towark The Sun)  
+完成任务 PAPERPUSH  
+完成任务 TRAFFIX  
+完成任务 XTHIEF  
+
+APT40使用过的漏洞如下：  
+CVE-2012-0158  
+CVE-2017-0199  
+CVE-2017-8759  
+CVE-2017-11882  
+
+三．涉及样本及分析  
+查找以往对TEMP.Periscope的报道后，获取到后门样本BADFLICK。对样本进行分析，详细情况如后文所示。  
+样本信息：  
+样本类型：PE文件  
+样本大小：36,864字节  
+感染类型：后门文件  
+MD5: BD9E4C82BF12C4E7A58221FC52FED705  
+SHA1: AA6A121F98330DF2EDEE6C4391DF21FF43A33604  
+SHA256: 7BA05ABDF8F0323AA30C3D52E22DF951EB5B67A2620014336EAB7907B0A5CEDF  
+
+样本行为分析：  
+持久化：  
+通过命令行参数注册DLL实现持久化。  
+
+网络连接：  
+样本运行后，向103.243.175.181发送上线信息；创建线程，根据获得的命令执行不同操作：  
+命令为0x2F——发送信息。  
+命令为0x33——调用cmd获取感染主机信息。  
+命令0x38——从攻击者服务器接受命令。  
+
+隐蔽自身：  
+在执行完持久化操作和创建用于网络连接的线程后，删除自身文件。  
+
+四．IOC  
+文件哈希：  
+c0b8d15cd0f3f3c5a40ba2e9780f0dd1db526233b40a449826b6a7c92d31f8d9  
+c63ccc5c08c3863d7eb330b69f96c1bcf1e031201721754132a4c4d0baff36f8  
+c92a26c42c5fe40bd343ee94f5022e05647876daa9b9d76a4eeb8a89b7f7103d  
+c67625e2b5e2f01b74e854c0c1fdf0b3b4733885475fe35b80a5f4bca13eccc7  
+138d62f8ee7e4902ad23fe81e72a1f3b7ac860d3c1fd5889ed8b8236b51ba64b  
+9d0c4ec62abe79e754eaa2fd7696f98441bc783781d8656065cddfae3dbf503e  
+3CF37DBE809C2FCB5F5C443B5D532639  
+2DD9AAB33FCDD039D3A860F2C399D1B1  
+35F456AFBE67951B3312F3B35D84FF0A  
+3CD25B30C7F25435C17EAF4829FE1FB6  
+81C5E320D12A6C3EC8B50378AC3EA3E1  
+6E843EF4856336FE3EF4ED27A4C792B1  
+8A9AC1B3EF2BF63C2DDFADBBBFD456B5  
+ABB77435A85DD381036D3BFCB04AA80D  
+E1512A0BF924C5A2B258EC24E593645A  
+E3867F6E964A29134C9EA2B63713F786  
+3C51C89078139337C2C92E084BB0904C  
+5D6AD552F1D1B5CFE99DDB0E2BB51FD7  
+CF027A4829C9364D40DCAB3F14C1F6B7  
+217D40CCD91160C152E5FCE0143B16EF  
+9BB8F045D5D4C686DCFF9D950257B312  
+E413B45A04BF5F812912772F4A14650F  
+3FEFA55DAEB167931975C22DF3ECA20A  
+40528E368D323DB0AC5C3F5E1EFE4889  
+A9E7539C1EBE857BAE6EFCEEFAA9DD16  
+BD9E4C82BF12C4E7A58221FC52FED705  
+
+IP：  
+185.106.120.206:21  
+103.243.175.181  
+
+URL：  
+http://www.vitaminmain.info

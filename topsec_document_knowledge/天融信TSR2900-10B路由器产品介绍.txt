@@ -1,0 +1,53 @@
+天融信路由器 TSR2900-10B
+
+产品概述  
+TSR2900-10B是天融信针对中小型企业、经济型酒店、营业厅和连锁分支等宽带上网场景设计的一款多功能宽带流控网关产品。该产品基于低功耗的MIPS多核嵌入式平台，采用路由交换一体的设计理念，支持NAT宽带共享上网、多链路负载均衡、GBSC弹性带宽分配方案、上网行为管理功能和VPN组网等实用功能，非常适合企业用户的需求。
+
+产品特点  
+强大的性能  
+TSR2900-10B采用64位多核处理器，配合专用ASIC高速交换引擎和FPGA器件，整个硬件平台运行在高速以太网架构之上。这种创新设计使得TSR具备超高的处理性能和效率，为系统承载大流量处理并提高稳定性提供了有力保障。
+
+出色的节能特性  
+TSR路由器系列采用低功耗节能芯片，整机功耗与业内主流设备相比减少15%至20%。用户长期使用TSR设备时能够进一步减少维护成本，符合低碳节能的理念和趋势。
+
+全面的路由协议  
+支持HDLC、PPP、dot1q等多种二层链路协议，支持静态路由、RIP、OSPF、BGP、BEIGRP等动态路由，以及PBR策略路由等，路由协议非常丰富，与业内主流厂商设备完美兼容。同时还支持路由、交换、安全和无线等多业务集成，满足各种复杂网络的建设需求。
+
+丰富的网络安全特性  
+支持灵活的ACL防火墙过滤和NAT地址转换技术，为用户网络抵御外部网络潜在威胁。支持多种VPN技术如IPSec、L2TP、PPTP和GRE，为用户提供低成本的专用网络解决方案，同时大大增强数据安全性。支持AAA、Radius、PAP/CHAP等多种安全技术，对接入用户进行安全认证，进一步提高网络安全性。
+
+实用的流量管理策略  
+TSR系列支持自主研发的弹性流控和行为管理策略GBSC，能够自动检测出口网络质量，根据当前可用带宽动态为每个用户分配带宽服务，确保关键业务和关键用户优先。还支持FIFO、PQ、CQ、CBWFQ、LLQ、WFQ、DSCP、IP Precedence、RTS、RSVP、CAR等丰富的队列调度技术和流量管理策略，让用户网络带宽得到更高效利用。
+
+高级业务集成  
+支持MPLSVPN技术，实现透明的以太网传输服务，灵活地满足企业互联需求。全面支持IPv4和IPv6双栈协议，帮助现有网络平滑过渡到IPv6。
+
+典型应用  
+随着企业信息化的推进，业务应用日益增多，例如办公系统、企业资源计划系统、客户关系管理系统、邮件系统、视频会议和数据库系统等。越来越多的业务应用需要通过网络开展，因此能提供一体化的宽带、安全和VPN等服务的路由器已成为网络出口的关键设备。TSR2900系列路由器可广泛应用于政府、教育、医疗和企业等场景，是满足网络需求的最佳产品。
+
+型号：TSR2900-10B  
+管理接口：1个MiniUSB，2个GE-SFP  
+业务端口：2个GE-TX，8个GE-LAN，1个USB2.0  
+其他特性：1个RST  
+转发性能：最大3Mpps  
+建议接入带宽：约1Gbps  
+最大并发用户：约400-500  
+输入电源：220VAC  
+设备尺寸：300*200*44mm  
+工作温度：-10℃至50℃  
+工作湿度：5%至95%（非冷凝）  
+链路协议：PPP、MPPP、PPPoE、ARP  
+网络协议：TCP、UDP、ICMP  
+二层交换：802.3协议、VLAN、QoS、Rate-Limit、STP、RSTP、广播风暴抑制  
+网络服务：NAT、NAPT、ALG、DHCP、DNS、DDNS、SNTP、PPPoESrv  
+路由协议：静态路由、RIP、OSPF、BGP、PBR  
+多路策略：等价路由、权重路由、智能选路、远程侦测、BFD、FIFO、PQ、CQ、WFQ、CBWFQ  
+QoS调度：GBSC弹性策略、L7 Filter  
+安全认证：AAA、PAP、CHAP、MS-CHAP  
+访问控制：IP-ACL、MAC-ACL、IMP-Filter  
+网络安全：IPSec、EZVPN、L2TP、PPTP、GRE，Flood攻击防护、ARP攻击防护，防攻击Ping of Death、Tear-drop、WinNuke、Ping Sweep等  
+组播协议：IGMP、PIM-SM、PIM-DM  
+IPv6基本：ND、PMTU、ACL  
+IPv6过渡：Dual-stack、Tunneling、NAT  
+IPv6路由：RIPng、OSPFv3、BGP4+  
+管理维护：CON、Telnet、SSH、SNMP、HTTP，Ping、Trace-route、Syslog，TFTP、FTP

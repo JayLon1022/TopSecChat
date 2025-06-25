@@ -1,0 +1,44 @@
+Metadata-Version: 2.4
+Name: llama-index-cli
+Version: 0.4.3
+Summary: llama-index cli
+Author: llamaindex
+Maintainer-email: Andrei Fajardo <andrei@runllama.ai>, Haotian Zhang <ht@runllama.ai>, Jerry Liu <jerry@llamaindex.ai>, Logan Markewich <logan@llamaindex.ai>, Simon Suo <simon@llamaindex.ai>, Sourabh Desai <sourabh@llamaindex.ai>
+License-Expression: MIT
+License-File: LICENSE
+Requires-Python: <4.0,>=3.9
+Requires-Dist: llama-index-core<0.13,>=0.12.0
+Requires-Dist: llama-index-embeddings-openai<0.4,>=0.3.1
+Requires-Dist: llama-index-llms-openai<0.5,>=0.4.0
+Description-Content-Type: text/markdown
+
+# LlamaIndex CLI
+
+## Installation
+
+```sh
+pip install llama-index-cli
+```
+
+## Usage
+
+```sh
+llamaindex-cli -h
+
+usage: llamaindex-cli [-h] {rag,download-llamapack,download-llamadataset,upgrade,upgrade-file,new-package} ...
+
+LlamaIndex CLI tool.
+
+options:
+  -h, --help            show this help message and exit
+
+commands:
+  {rag,download-llamapack,download-llamadataset,upgrade,upgrade-file,new-package}
+    rag                 Ask a question to a document / a directory of documents.
+    download-llamapack  Download a llama-pack
+    download-llamadataset
+                        Download a llama-dataset
+    upgrade             Upgrade a directory containing notebooks or python files.
+    upgrade-file        Upgrade a single notebook or python file.
+    new-package         Initialize a new llama-index package
+```

@@ -1,0 +1,42 @@
+白黑加密勒索病毒样本分析
+
+病毒概述  
+近日，天融信EDR安全团队捕获到一例病毒样本。黑客通过社交工程手段诱骗受害者点击下载文件，点击后获取操作系统信息，将自身复制到系统目录，并在注册表中添加开机自启动项，采用AES算法对指定文件进行加密。加密完成后，会弹出提示窗口显示勒索信息。天融信EDR能够精确检测并清除该木马，有效阻止事件的蔓延。
+
+病毒分析  
+收到样本后，我们使用侦壳软件进行分析，发现该文件没有壳。查看文件熵值后，判断可能存在加密数据，读取系统信息并整理如下：
+
+所有用户配置文件路径：C:\ProgramData  
+应用程序数据路径：C:\Users\s3z\AppData\Roaming  
+客户端名称：DESKTOP-T1MJ91T  
+公共程序文件路径：C:\Program Files\Common Files  
+64位公共程序文件路径：C:\Program Files (x86)\Common Files  
+系统驱动器：C:  
+用户主目录：C:\Users\s3z  
+本地应用程序数据路径：C:\Users\s3z\AppData\Local  
+登录服务器：\\SANDBOX-PC  
+处理器架构：AMD64  
+处理器标识符：Intel Core i4 Family 6 Model 63 Stepping 2, GenuineIntel  
+系统目录：C:\Windows  
+临时文件路径：C:\Users\s3z\AppData\Local\Temp  
+用户域：sandbox-PC  
+用户名：s3z  
+用户配置文件路径：C:\Users\s3z  
+Windows目录：C:\Windows  
+
+病毒行为  
+该病毒会将自身复制到系统目录，并在注册表中添加开机自启动项，调用AES算法对文件进行加密。
+
+被加密的文件后缀名整理如下：  
+勒索后缀名  
+病毒会建立勒索界面，并命名为ye64T0p，勒索信的内容如下：
+
+防护建议  
+针对该病毒，可以通过以下三种方式进行防御或查杀：  
+1. 下载安装天融信EDR防御软件并进行全盘扫描，以清除该木马。  
+2. 更改系统及应用的默认密码，配置高强度密码认证，并定期更新密码。  
+3. 及时修复系统及应用的漏洞。  
+
+天融信EDR获取方式  
+- 天融信EDR企业版试用：可通过天融信各地分公司获取（查询网址：http://www.topsec.com.cn/contact/）  
+- 天融信EDR单机版下载地址：http://edr.topsec.com.cn  

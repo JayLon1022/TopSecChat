@@ -1,0 +1,198 @@
+目 录  
+一、概述  
+二、样本信息  
+三、技术分析  
+四、相似度分析  
+五、总结  
+
+一、概述  
+2012年，Flame被曝光后，攻击者通过下发“自杀”命令进行清理，并擦除与之通信的命令和控制服务器，从此销声匿迹。近期，Chronicle安全研究人员表示他们发现了2014年出现的新版火焰版本，并且可能在2016年之前一直保持活跃状态。本文对已有的样本进行分析，主要分为两部分（32位和64位样本各4个），为Flame2.0的部分功能模块。
+
+二、样本信息  
+当前获取到的样本信息如下：  
+样本1  
+文件名称: af8ccd0294530c659580f522fcc8492d92c2296dc068f9a42474d52b2b2f16e4  
+原始文件名: sensrsvr.dll  
+文件大小: 786 KB  
+编译时间: 2011-06-01 09:09:29  
+MD5: 98303a3a424c407a3e27ab818066811c  
+SHA1: 5ab8b1ac11789606333ff94066cae6048a335ac5  
+SHA256: af8ccd0294530c659580f522fcc8492d92c2296dc068f9a42474d52b2b2f16e4  
+
+样本2  
+文件名称: 426aa55d2afb9eb08b601d373671594f39a1d9d9a73639c4a64f17d674ca9a82  
+原始文件名: sensrsvcs.dll  
+文件大小: 783 KB  
+编译时间: 2006-06-08 07:23:59  
+MD5: 7ab1c0c5e7d1ed834bccdfcafb5b07f2  
+SHA1: 21d3d7c33f63def5aed98d54dac5de218c49a35f  
+SHA256: 426aa55d2afb9eb08b601d373671594f39a1d9d9a73639c4a64f17d674ca9a82  
+
+样本3  
+文件名称: 15a9b1d233c02d1fdf80071797ff9077f6ac374958f7d0f2b6e84b8d487c9cd1  
+原始文件名: sensrsvcs.dll  
+文件大小: 791 KB  
+编译时间: 2006-06-17 10:25:13  
+MD5: 2a2614756387176845187a7de247a98a  
+SHA1: ef2f8fca2a010f49ab4080a6439651320b95e44f  
+SHA256: 15a9b1d233c02d1fdf80071797ff9077f6ac374958f7d0f2b6e84b8d487c9cd1  
+
+样本4  
+文件名称: 69227d046ad108e5729e6bfaecc4e05a0da30d8e7e87769d9d3bbf17b4366e64  
+原始文件名: sensrsvr.dll  
+文件大小: 798 KB  
+编译时间: 2010-05-26 05:50:49  
+MD5: 2529ecdd21ad9854d52ab737306bee59  
+SHA1: b144c68108d9a9208accb562b141d8b8a15550d7  
+SHA256: 69227d046ad108e5729e6bfaecc4e05a0da30d8e7e87769d9d3bbf17b4366e64  
+
+样本5  
+文件名称: 134849f697ab5f31ffb043b06e9ca1c9b98ffebba8af8ccdedd036a6263bf3a4  
+原始文件名: wmihost.dll  
+文件大小: 849 KB  
+编译时间: 2011-04-24 16:40:33  
+MD5: 294be9caf93116430f7a8007a202e9fd  
+SHA1: 45f348b46a745c1f45e4eac0185d73cc4e65edc3  
+SHA256: 134849f697ab5f31ffb043b06e9ca1c9b98ffebba8af8ccdedd036a6263bf3a4  
+
+样本6  
+文件名称: b61c62724421d38a13c58877f31298bd663c1c8f8c3fe7d108eb9c8fe5ad0362  
+原始文件名: wmihost64.dll  
+文件大小: 0.97 MB  
+编译时间: 2011-02-07 14:36:09  
+MD5: 6ce0a12d7461f3267af7fa835a0b5677  
+SHA1: 941195b52f5ea4eb60027c3aeb67cd72e95f4c8e  
+SHA256: b61c62724421d38a13c58877f31298bd663c1c8f8c3fe7d108eb9c8fe5ad0362  
+
+样本7  
+文件名称: 0039eb194f00b975145a35ede6b48d9c1ea87a6b2e61ac015b3d38e7e46aecbb  
+原始文件名: wmisvcs64.dll  
+文件大小: 940 KB  
+编译时间: 2006-08-02 14:36:56  
+MD5: 15a0b9948d60e6bc6f60d7226caa923f  
+SHA1: 16a02af1746adbc173a5dc5a16012468133777c5  
+SHA256: 0039eb194f00b975145a35ede6b48d9c1ea87a6b2e61ac015b3d38e7e46aecbb  
+
+样本8  
+文件名称: 8cb78327bd69fda61afac9393187ad5533a63d43ebf74c0f9800bedb814b20ad  
+原始文件名: wmisvcs64.dll  
+文件大小: 1.18 MB  
+编译时间: 2006-05-11 14:22:00  
+MD5: 883034ba4657ba4765a20f680721d0ea  
+SHA1: eafb4e041587f4204c2dda9bbb91622ce34421f0  
+SHA256: 8cb78327bd69fda61afac9393187ad5533a63d43ebf74c0f9800bedb814b20ad  
+
+根据获取到的样本的导出函数，可以将样本归为以下三类：  
+
+三、技术分析  
+静态信息  
+DLL x86  
+资源部分包含Lua 5.1相关内容  
+
+可能存在的加密算法  
+代码分析  
+导出函数  
+
+根据导出函数名称猜测，此文件包含6个功能：  
+- 检测有效链接  
+- 生成Rsop策略  
+- 是否内部上下文  
+- 是否外部上下文  
+- 移除Rsop策略  
+- Rsop文件访问检查  
+
+DLL运行后，导出函数需经过外部调用才能运行，其他几个函数最终会直接或间接调用CheckValidConnection，主要功能在此函数中。  
+CheckValidConnection的整体功能是解密资源文件，获取Lua相关函数等信息。  
+
+获取AES、zlib等资源，解密资源文件101、102，并载入dll。  
+获取Lua相关函数，写入文件。  
+
+GenerateRsopPolicy创建线程，线程中调用了CheckValidConnection。  
+疑似解密操作，IsInsideContext主要调用了GenerateRsopPolicy函数。  
+
+IsOutsideContext疑似进行解密操作后，调用CheckValidConnection，RemoveRsopPolicy调用IsOutsideContext函数。  
+RsopFileAccessCheck的参数可能为一个结构体，其中的值会根据不同的字段来使用，最后一个参数是a1+0x16，说明此结构体至少有0x16个字节，异常处理与socket相关，调用CheckValidConnection。  
+
+清理环境  
+静态信息  
+DLL x64  
+
+泄露的静态库编译时间信息，可能包含的加密算法，代码分析，此样本导出函数：  
+
+ConnectHost经过分析，sub_18002FB80()函数为主要的功能函数。在该函数中，会将收集到的时间信息写入到文件；然后通过字符串拼接，得到事件名称，打开事件并对其进行设置。  
+
+DisconnectHost经过分析，为sub_180091470()函数的主要功能。对该函数进行分析，发现其具有获取屏幕信息、查看管道状态、设置事件和写入文件的操作。  
+
+CreateHost经过分析，判断本函数主要用于初始化操作，对一些字段进行赋值，在函数中，存在一个函数指针的调用，由于无法对样本进行调试，所以无法判断该函数执行的功能。  
+
+CloseHost经过分析，sub_180004AE8()函数为主要的功能函数，除此之外，本函数还具有重置事件、分配内存、复制当前进程句柄和创建线程的功能。对该函数进行分析，发现通过对GetProcAddress()函数进行调用，获取一些函数的地址，但由于函数名是动态获取的，在无法调试的情况下，不能得知具体函数信息。除此之外，本函数还具有拓展环境变量字符串、关闭进程和删除文件等功能。  
+
+QueryHost经过分析，本函数通过使用GetVersionExA()函数，判断系统版本信息，根据不同的版本信息返回不同的全局变量。其次，本函数还有对PE结构的操作，并使用WriteProcessMemory()函数向进程内存中写入数据。随后本函数通过函数指针执行了一个函数，该函数的功能尚不可知。  
+
+Uninitialize经过分析发现，本函数调用了大量的MessageBoxA/W()函数，输出错误提示信息。进一步分析中，还发现导出函数Terminate()和Initialize()函数都被定位到Uninitialize()函数，因此下面不再对这两个导出函数进行描述。  
+
+Reset经过分析，发现本函数通过两个函数指针进行函数的调用，由于所知信息有限，不能根据现有信息得出函数指针所指向的函数，因此无法分析其功能。  
+
+QueryHostEx经过分析，发现本函数仅修改了全局变量dword_1801250E8的值，然后调用QueryHost()函数实现其功能，具体参考QueryHost()函数的分析。  
+
+Abort经过分析，本函数主要的功能函数为sub_180037F88()函数。对该函数进一步分析发现，该函数存在大量的自定义函数调用，因此该函数的具体功能尚不明确。  
+
+在分析过程中，发现本样本使用了Plink部分源码。  
+
+解密函数分析过程中，发现以下解密函数：  
+
+解密函数1：  
+```python
+def DecodeMethod1(indata, r_start, r_length):
+    dec_data = ""
+    enc_data = indata[r_start:]
+    dec_len = ord(indata[r_length])
+    for index, byte in enumerate(enc_data[:dec_len]):
+        eax = (
+            (((dec_len - index) - 1) ^ 0x1D) * ((dec_len - index) + 0x10)
+        ) & 0xFFFFFFFF
+        eax += 0x1000193
+        cl = (((eax >> 0x18) & 0xFF) ^ ((eax >> 0x10) & 0xFF))
+        cl = (cl ^ ((eax >> 0x8) & 0xFF))
+        cl = (cl ^ ord(byte)) & 0xFF
+        cl = (cl ^ (eax & 0xFF))
+        dec_data += chr(cl)
+    return dec_data
+```
+
+解密函数2：  
+```python
+def DecodeMethod2(indata, key, r_start, r_length):
+    enc_data = indata[r_start:]
+    dec_length = ord(indata[r_length])
+    dec_data = ""
+    for index, byte in enumerate(enc_data[:dec_length]):
+        if ord(enc_data[index]) == 0 and ord(enc_data[index + 1]) == 0:
+            break
+        dec_data += chr(ord(byte) ^ ord(key[index % len(key)]))
+    return dec_data
+```
+
+四、相似度分析  
+类型一：  
+由于样本类型一的导出函数中，均对CheckValidConnection()函数进行了调用，这里主要分析CheckValidConnection()函数的相似度情况。  
+
+样本1 VS 样本2：  
+代码相似度达到0.95，CheckValidConnection函数代码一致。  
+
+样本3 VS 样本4：  
+代码相似度达到0.95，CheckValidConnection函数代码一致。  
+
+样本1 VS 样本3：  
+样本1为32位，样本3为64位，通过函数执行流程和关键API可以确定其功能基本一致。  
+
+样本5为32位，样本6为64位，经对比函数流程与API调用，功能一致。  
+
+样本6 VS 样本8：  
+在样本6和样本8中发现了同样的解密代码，因此样本类型二与类型三之间也存在关联。  
+
+样本7 VS 样本8：  
+样本7为32位，样本8为64位，经对比函数流程与API调用，功能一致。  
+
+五、总结  
+通过对已有样本的分析，样本的编译时间为2006-2011年，样本中泄露的静态链接库编译时间为2014年，猜测编译时间已被修改。根据样本中包含的Lua相关内容，从资源中解密数据等功能，以及开源情报确认该批样本为Flame2.0。Flame1.0模块通过基于XOR的密钥解密嵌入的资源，使用ZLIB解压缩。在此新版本中，通过AES256加密嵌入式资源。部分模块包含Plink相关的字符串，猜测可能用于横向移动。由于样本导出函数需传参解密资源文件，无法正常执行调试，暂时只能根据反汇编代码分析部分片段，无法准确判断具体功能。

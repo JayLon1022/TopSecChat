@@ -1,0 +1,86 @@
+Rootkit样本分析报告
+
+目录
+一、样本行为概述
+二、OnlineInstaller.exe逆向分析
+1. 写入OnlineInstaller.tmp文件
+2. 写入spoolsr.exe文件
+3. 写入KH.dat文件
+4. 写入usp20.dll文件
+5. 写入UP.dat文件
+6. 写入iaStorE.sys文件
+7. 写入KeyHook32.dll文件
+8. 写入MS.dat文件
+9. 创建注册表项，写入驱动路径并加载驱动
+三、iaStorE.sys逆向分析
+四、spoolsr.exe逆向分析
+五、usp20.dll逆向分析
+六、KeyHook32.dll逆向分析
+七、提取出的字符串和特征
+1. 提取出的URL
+2. 静态特征
+八、残留病毒清理
+
+一、样本行为概述
+样本信息：
+MD5：4b042bfd9c11ab6a3fb78fa5c34f55d0
+SHA-1：b0f506640c205d3fbcfe90bde81e49934b870eab
+SHA-256：59c662a5207c6806046205348b22ee45da3f685fe022556716dbbd6643e61834
+SSDEEP：98304:ghXqJiXwwhwvxR7FI6wYroMUQrYeoFj6bjsKzZx7T7:ghXqsX3hs79bxiEbgKX7
+文件类型：Win32 EXE
+Magic：PE32可执行文件，适用于MS Windows（GUI）Intel 80386 32位
+
+OnlineInstaller.exe启动后，会在C:\Windows\System32\目录下释放MS.dat、UP.dat、usp20.dll、KH.dat、KeyHook32.dll、spoolsr.exe，同时在系统Temp目录下释放OnlineInstaller.tmp文件，该文件实际上是OnlineInstaller.exe文件的副本，只是改了后缀名。运行后，OnlineInstaller.exe首先会检测运行参数“-install”，如果不存在该参数，则会创建同名且与当前镜像相同的“.tmp”文件进行执行并加入“-install”参数，随后统计当前系统和软件信息上传至C&C服务器hxxp://iostream.system.band/dump/io/time.php。收集的信息包括系统版本、MAC地址、用户所安装的浏览器信息和安全软件信息。如果带有“-install”参数，则会释放多个病毒模块。通过功能分类后，整体分为两个部分：流量劫持与挖取门罗币。
+
+OnlineInstaller.exe释放的所有病毒模块存放于资源KPE中，所有驱动模块数据采用zlib算法压缩，其他病毒模块则通过异或加密方式存放在镜像数据中。以释放spoolsr.exe为例，首先对原有镜像数据进行解密，然后将随机生成的长度为0x40的随机数据拼接在原有镜像数据的尾部再释放文件，最后将拼接后的镜像数据再重新进行异或加密。
+
+OnlineInstaller.exe会对其释放的文件进行备份，后缀名为“.dat”（例如HK.dat是HookKey32.dll的备份）。在OnlineInstaller.exe进程中，会向C:\Windows\System32\drivers\目录下写入iaStorE.sys驱动文件，并以服务的方式加载该驱动。该驱动执行的操作包括：
+1. 在注册表项\\registry\\machine\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Windows下写入AppInit_DLLs项，键值为usp20.dll文件，AppInit_DLLs实现DLL注入，操作系统在加载kernel32.dll时，自动加载注册表中位于AppInit_DLLs键值下的所有dll文件，实现用户层的DLL注入。
+2. 在注册表项\\registry\\machine\\SYSTEM\\CurrentControlSet\\services\\spoolsr下写入spoolsr.exe文件的路径，使得spoolsr.exe以服务的方式启动。
+
+具体行为在火绒剑中监测到如下图所示。网络通信以POST方式发送数据包，连接服务器，告知被感染系统的信息（包括系统浏览器信息、杀毒软件等信息）。
+
+二、OnlineInstaller.exe逆向分析
+OD中逆向分析OnlineInstaller.exe文件，首先写入OnlineInstaller.tmp文件。
+
+（此处省略代码示例）
+
+之后，依次写入spoolsr.exe、KH.dat、usp20.dll、UP.dat、iaStorE.sys和KeyHook32.dll文件，并创建注册表项，写入驱动路径并加载驱动。
+
+三、iaStorE.sys逆向分析
+iaStorE.sys文件的操作是将spoolsr.exe注册为服务并启动，同时写入AppInit_DLLs注册表键值项以实现DLL注入。
+
+四、spoolsr.exe逆向分析
+spoolsr.exe只能以服务方式启动，直接使用OD动态调试无法成功。spoolsr.exe被注册为系统服务，服务名为“mspoolv”，主要用于释放并运行门罗币矿工程序svchst.exe。在服务启动后，首先结束当前环境中正在运行的svchst.exe进程（矿工进程），然后根据当前系统环境（x64或x86）对加密的门罗币矿工病毒二进制数据进行解密和释放。
+
+五、usp20.dll逆向分析
+对usp20.dll查壳，发现该文件被加了UPX壳。脱壳后分析发现，usp20.dll只执行了一个操作：加载KeyHook32.dll文件。usp20.dll启动方式是APPInit_DLL注入方式，随着kernel32.dll的加载启动，同时在usp20.dll文件中的DLLMain()函数中，启动加载KeyHook32.dll文件。
+
+六、KeyHook32.dll逆向分析
+KeyHook32.dll文件同样被加了UPX壳，脱壳后，发现系统的svchost.exe进程中的CreateProcessInternalW函数被HOOK了，挂钩位置为C:\Windows\System32\KeyHook32.dll文件。通过注册表中的加密劫持数据对浏览器进程附加命令行参数，达到流量劫持的目的。
+
+七、提取出的字符串和特征
+1. 提取出的URL
+（此处省略URL列表）
+
+2. 静态特征
+Yara规则编写如下：
+rule CheckRootKit
+{
+strings:
+$hex_string1 = { D9 CB B0 E8 9D 9A 51 E8 92 C8 B0 E8 CF 9A 51 E8 }
+$hex_string2 = { 77 65 62 72 6F 6F 74 00 46 2D 53 65 63 75 72 65 00 00 00 00 42 69 74 64 65 66 65 6E 64 65 72 20 41 67 65 6E 74 00 00 00 45 6D 73 69 73 6F 66 74 00 00 00 00 54 72 65 6E 64 4D 69 63 72 6F 00 00 4D 63 41 66 65 65 00 00 4E 6F 72 74 6F 6E 00 00 4B 61 73 70 65 72 73 6B 79 4C 61 62 00 00 00 00 41 56 41 53 54 20 53 6F 66 74 77 61 72 65 00 00 41 76 69 72 61 00 00 00 45 53 45 54 00 00 00 00 41 56 47 00 42 61 69 64 75 20 53 65 63 75 72 69 74 79 00 00 33 36 30 54 6F 74 61 6C 53 65 63 75 72 69 74 79 00 00 00 00 33 36 30 53 61 66 65 00 4D 69 63 72 6F 73 6F 66 74 57 69 6E 64 6F 77 7320 44 65 66 65 6E 64 65 72 00 }
+$hex_string3 = { 69 00 61 00 53 00 74 00 6F 00 72 00 45 }
+condition:
+$hex_string1 or $hex_string2 or $hex_string3
+}
+
+Yara规则检测结果：
+
+八、残留病毒清理
+删除以下文件：
+- C:\Windows\System32\drivers\iaStorE.sys
+- %HOMEPATH%\AppData\Local\Temp\OnlineInstaller.tmp
+- C:\Windows\System32\spoolsr.exe
+- C:\Windows\System32\KeyHook32.dll
+- C:\Windows\System32\usp20.dll
