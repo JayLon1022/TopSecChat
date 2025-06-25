@@ -1,14 +1,11 @@
 # conf.yaml
 
 llm:
-  # 你的 OpenAI-Compatible API Key
-  api_key: "5d03052488a46a5c27afa4000cb5fb76.XXgIH7nV5ElcIS5y" 
-  # 你的 OpenAI-Compatible API Base URL
-  base_url: "https://open.bigmodel.cn/api/paas/v4/"
+  api_key: "" 
+  base_url: ""
   # 你使用的模型名称
   model_name: "glm-4-air"
   # 系统提示词，指导LLM如何回答
-  # todo: 润色提示词
   system_prompt: |
     你是天融信的AI客服小信，专注于回答用户的网络安全常识和公司产品相关问题。
 
@@ -37,9 +34,9 @@ rag:
   topsec_document_knowledge_storage_path: "./topsec_document_knowledge"
   # LlamaIndex 索引持久化存储路径（兼容旧逻辑）
   storage_path: "./storage"
-  # 新增：网络安全知识库索引存储路径
+  # 网络安全知识库索引存储路径
   security_knowledge_storage_path: "./storage/security_knowledge"
-  # 新增：天融信公司文档知识库索引存储路径
+  # 天融信公司文档知识库索引存储路径
   topsec_document_knowledge_storage_path: "./storage/topsec_document_knowledge"
   security_knowledge_docs_path: "./security_knowledge"
   topsec_document_docs_path: "./topsec_document_knowledge"
@@ -52,5 +49,4 @@ server:
   port: 16361
 
 llamaparse:
-  # 请将 "llx-..." 替换成你在 LlamaCloud 官网上获取的真实API Key
-  api_key: "llx-NrVJWuHSGy0uG2S9NSOnhgNCmsu53pMyzSw9ifxzrB5onDQ6"
+  api_key: ""
