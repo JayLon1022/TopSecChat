@@ -59,7 +59,7 @@ A modular AI assistant for secure enterprise Q&A, built with LlamaIndex and LLM 
 
 ## 📦 Installation
 
-### Install from PyPI
+### [TBD] Install from PyPI
 
 ```bash
 pip install tschat
@@ -69,7 +69,7 @@ pip install tschat
 
 ```bash
 git clone https://github.com/Y0oMu/RAG_topsec.git
-cd RAG_topsec
+cd TopSecChat
 pip install -r requirements.txt
 ```
 
@@ -113,7 +113,7 @@ python client_test.py
 
 ---
 
-## 📝 License
+## 📝 [TBD] License
 
 [MIT License](LICENSE)
 
