@@ -6,6 +6,12 @@ A modular AI assistant for secure enterprise Q&A, built with LlamaIndex and LLM 
 
 ---
 
+## 🗺️ Technical Roadmap
+
+![TopSecChat Technical Roadmap](assets/TopSecChat.png)
+
+---
+
 ## 📋 Table of Contents
 
 1. [🗂️ Project Structure](#️-project-structure)
